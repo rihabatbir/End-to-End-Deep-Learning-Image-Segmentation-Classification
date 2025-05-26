@@ -8,13 +8,13 @@ import requests
 # --- CONFIGURATION ---
 
 MODEL_PATH = 'saved_models/sign_language_letters_model.keras'
-MODEL_URL = 'https://drive.google.com/uc?export=download&id=1duhBG2BzWrnPuRmDRhYj931LrYTu1WsPb'  # ✔️ ou Hugging Face si dispo
+MODEL_URL = 'https://huggingface.co/Roroat/sign-language-model/resolve/main/sign_language_letters_model.keras'
 
-# --- TELECHARGEMENT SI NECESSAIRE ---
+# --- TÉLÉCHARGEMENT DU MODÈLE 
 
 if not os.path.exists(MODEL_PATH):
     os.makedirs("saved_models", exist_ok=True)
-    st.info("⬇️ Téléchargement du modèle...")
+    st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
     try:
         r = requests.get(MODEL_URL, stream=True)
         r.raise_for_status()
@@ -24,15 +24,15 @@ if not os.path.exists(MODEL_PATH):
                     f.write(chunk)
         st.success("✅ Modèle téléchargé avec succès.")
     except Exception as e:
-        st.error(f"❌ Erreur de téléchargement : {e}")
+        st.error(f"❌ Erreur lors du téléchargement : {e}")
         st.stop()
 
-# --- CHARGEMENT DU MODELE ---
+# --- CHARGEMENT DU MODÈLE ---
 
 try:
     model = load_model(MODEL_PATH)
 except Exception as e:
-    st.error(f"❌ Erreur de chargement du modèle : {e}")
+    st.error(f"❌ Erreur lors du chargement du modèle : {e}")
     st.stop()
 
 # --- CLASSES ---
