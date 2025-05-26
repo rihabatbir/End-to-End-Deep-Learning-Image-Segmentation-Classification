@@ -7,3 +7,4 @@ seaborn
 huggingface_hub
 scikit-learn
 requests
+tensorflow==2.9.3
