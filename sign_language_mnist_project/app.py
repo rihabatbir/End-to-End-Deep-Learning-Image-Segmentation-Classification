@@ -16,7 +16,8 @@ if not os.path.exists(MODEL_PATH):
     os.makedirs("saved_models", exist_ok=True)
     st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
     try:
-        r = requests.get(MODEL_URL, stream=True)
+        headers = {"User-Agent": "Mozilla/5.0"}  # ✅ Ajout critique
+        r = requests.get(MODEL_URL, stream=True, headers=headers)
         r.raise_for_status()
         with open(MODEL_PATH, 'wb') as f:
             for chunk in r.iter_content(chunk_size=8192):
@@ -26,6 +27,7 @@ if not os.path.exists(MODEL_PATH):
     except Exception as e:
         st.error(f"❌ Erreur lors du téléchargement : {e}")
         st.stop()
+
 
 # --- CHARGEMENT DU MODÈLE ---
 
