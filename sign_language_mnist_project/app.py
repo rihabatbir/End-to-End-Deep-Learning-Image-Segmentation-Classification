@@ -6,7 +6,7 @@ import os
 import requests
 
 MODEL_PATH = 'saved_models/sign_language_letters_model.keras'
-MODEL_URL = 'https://drive.google.com/uc?export=download&id=TON_ID_Ici'
+MODEL_URL = 'https://drive.google.com/file/d/1uhbG28ZwFwmPumRnYWjD31zYuT1WSvPb/view?usp=sharing'
 
 if not os.path.exists(MODEL_PATH):
     os.makedirs("saved_models", exist_ok=True)
