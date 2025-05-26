@@ -5,31 +5,29 @@ from PIL import Image
 from huggingface_hub import hf_hub_download
 import os
 
-# --- Téléchargement fiable depuis Hugging Face ---
-st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
+# --- Téléchargement via Hugging Face Hub ---
 try:
+    st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
     model_path = hf_hub_download(
         repo_id="Roroat/sign-language-model",
-        filename="sign_language_letters_model.keras",
-        local_dir="saved_models",
-        local_dir_use_symlinks=False  # important pour Streamlit Cloud
+        filename="sign_language_letters_model.keras"
     )
     st.success("✅ Modèle téléchargé avec succès.")
 except Exception as e:
-    st.error(f"❌ Téléchargement échoué : {e}")
+    st.error(f"❌ Erreur lors du téléchargement du modèle : {e}")
     st.stop()
 
-# --- Chargement du modèle ---
+# --- Chargement du modèle Keras ---
 try:
     model = load_model(model_path)
 except Exception as e:
     st.error(f"❌ Erreur lors du chargement du modèle : {e}")
     st.stop()
 
-# --- Classes prédictibles ---
+# --- Définition des classes ---
 classes = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
-# --- Interface ---
+# --- Interface utilisateur ---
 st.title("📷 Reconnaissance de lettres ASL")
 uploaded_file = st.file_uploader("Téléversez une image (64x64)", type=["png", "jpg", "jpeg"])
 
@@ -49,6 +47,7 @@ if uploaded_file is not None:
 
         st.success(f"Lettre prédite : **{predicted_class}**")
         st.info(f"Confiance : {confidence:.2f}%")
+
         st.subheader("📊 Scores par classe :")
         for i, score in enumerate(prediction[0]):
             st.write(f"{classes[i]} : {score:.4f}")
