@@ -3,34 +3,28 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import os
-import requests
+from huggingface_hub import hf_hub_download
 
 # --- CONFIGURATION ---
-
 MODEL_PATH = 'saved_models/sign_language_letters_model.keras'
-MODEL_URL = 'https://huggingface.co/Roroat/sign-language-model/resolve/main/sign_language_letters_model.keras'
 
-# --- TÉLÉCHARGEMENT DU MODÈLE 
-
+# --- TÉLÉCHARGEMENT DU MODÈLE ---
 if not os.path.exists(MODEL_PATH):
     os.makedirs("saved_models", exist_ok=True)
     st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}  # ✅ Ajout critique
-        r = requests.get(MODEL_URL, stream=True, headers=headers)
-        r.raise_for_status()
-        with open(MODEL_PATH, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
+        hf_hub_download(
+            repo_id="Roroat/sign-language-model",
+            filename="sign_language_letters_model.keras",
+            local_dir="saved_models",
+            local_dir_use_symlinks=False
+        )
         st.success("✅ Modèle téléchargé avec succès.")
     except Exception as e:
-        st.error(f"❌ Erreur lors du téléchargement : {e}")
+        st.error(f"❌ Échec du téléchargement du modèle : {e}")
         st.stop()
 
-
 # --- CHARGEMENT DU MODÈLE ---
-
 try:
     model = load_model(MODEL_PATH)
 except Exception as e:
@@ -38,11 +32,9 @@ except Exception as e:
     st.stop()
 
 # --- CLASSES ---
-
 classes = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 # --- INTERFACE UTILISATEUR ---
-
 st.title("📷 Reconnaissance de lettres ASL (images réelles)")
 uploaded_file = st.file_uploader("Téléversez une image (64x64)", type=["png", "jpg", "jpeg"])
 
