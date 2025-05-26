@@ -3,7 +3,18 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import os
+import requests
 
+MODEL_PATH = 'saved_models/sign_language_letters_model.keras'
+MODEL_URL = 'https://drive.google.com/uc?export=download&id=TON_ID_Ici'
+
+if not os.path.exists(MODEL_PATH):
+    os.makedirs("saved_models", exist_ok=True)
+    print("⬇️ Téléchargement du modèle depuis Drive...")
+    r = requests.get(MODEL_URL)
+    with open(MODEL_PATH, 'wb') as f:
+        f.write(r.content)
+    print("✅ Modèle téléchargé")
 # Chargement du modèle entraîné
 model = load_model('saved_models/sign_language_letters_model.keras')
 
