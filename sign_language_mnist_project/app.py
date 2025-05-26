@@ -12,13 +12,13 @@ MODEL_FILENAME = "sign_language_letters_model.keras"
 # 📦 Téléchargement depuis Hugging Face
 st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
 try:
-model_path = hf_hub_download(
-    repo_id="Roroat/sign-language-model",
-    filename="sign_language_letters_model.keras",
-    local_dir="saved_models",
-    revision="main",  # assure que tu es sur la bonne branche
-    force_download=True
-)
+    model_path = hf_hub_download(
+        repo_id=MODEL_REPO,
+        filename=MODEL_FILENAME,
+        local_dir="saved_models",
+        revision="main",  # ou remplace par une tag si tu veux figer la version
+        force_download=True
+    )
     st.success("✅ Modèle téléchargé avec succès.")
 except Exception as e:
     st.error(f"❌ Erreur lors du téléchargement : {e}")
@@ -36,16 +36,16 @@ classes = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 # Interface utilisateur
 st.title("📷 Reconnaissance de lettres ASL (images réelles)")
-uploaded_file = st.file_uploader("Téléversez une image (64x64)", type=["png", "jpg", "jpeg"])
+uploaded_file = st.file_uploader("📤 Téléversez une image (64x64)", type=["png", "jpg", "jpeg"])
 
 if uploaded_file is not None:
     # Traitement de l’image
-    image = Image.open(uploaded_file).convert('L')
-    image = image.resize((64, 64))
-    img_array = np.array(image).astype(np.float32) / 255.0
-    img_array = img_array.reshape(1, 64, 64, 1)
+    image = Image.open(uploaded_file).convert('L')  # niveau de gris
+    image = image.resize((64, 64))  # redimensionne à 64x64
+    img_array = np.array(image).astype(np.float32) / 255.0  # normalisation
+    img_array = img_array.reshape(1, 64, 64, 1)  # ajout d'une dimension batch
 
-    st.image(image, caption="Image prétraitée", width=150)
+    st.image(image, caption="🖼️ Image prétraitée", width=150)
 
     if st.button("🔍 Prédire"):
         prediction = model.predict(img_array)
@@ -53,7 +53,7 @@ if uploaded_file is not None:
         predicted_class = classes[predicted_index]
         confidence = np.max(prediction) * 100
 
-        st.success(f"Lettre prédite : **{predicted_class}**")
+        st.success(f"✅ Lettre prédite : **{predicted_class}**")
         st.info(f"🔢 Confiance : {confidence:.2f}%")
 
         st.subheader("📊 Scores par classe :")
