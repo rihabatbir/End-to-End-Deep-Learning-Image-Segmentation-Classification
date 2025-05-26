@@ -6,7 +6,7 @@ import os
 import requests
 
 MODEL_PATH = 'saved_models/sign_language_letters_model.keras'
-MODEL_URL = 'https://drive.google.com/file/d/1uhbG28ZwFwmPumRnYWjD31zYuT1WSvPb/view?usp=sharing'
+MODEL_URL = 'https://drive.google.com/uc?export=download&id=1duhBG2BzWrnPuRmDRhYj931LrYTu1WsPb'
 
 if not os.path.exists(MODEL_PATH):
     os.makedirs("saved_models", exist_ok=True)
@@ -15,6 +15,7 @@ if not os.path.exists(MODEL_PATH):
     with open(MODEL_PATH, 'wb') as f:
         f.write(r.content)
     print("✅ Modèle téléchargé")
+
 # Chargement du modèle entraîné
 model = load_model('saved_models/sign_language_letters_model.keras')
 
