@@ -12,12 +12,13 @@ MODEL_FILENAME = "sign_language_letters_model.keras"
 # 📦 Téléchargement depuis Hugging Face
 st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
 try:
-    model_path = hf_hub_download(
-        repo_id=MODEL_REPO,
-        filename=MODEL_FILENAME,
-        local_dir="saved_models",
-        local_dir_use_symlinks=False
-    )
+model_path = hf_hub_download(
+    repo_id="Roroat/sign-language-model",
+    filename="sign_language_letters_model.keras",
+    local_dir="saved_models",
+    revision="main",  # assure que tu es sur la bonne branche
+    force_download=True
+)
     st.success("✅ Modèle téléchargé avec succès.")
 except Exception as e:
     st.error(f"❌ Erreur lors du téléchargement : {e}")
