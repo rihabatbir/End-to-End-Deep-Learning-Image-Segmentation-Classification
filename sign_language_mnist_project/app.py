@@ -5,34 +5,51 @@ from PIL import Image
 import os
 import requests
 
+# --- CONFIGURATION ---
+
 MODEL_PATH = 'saved_models/sign_language_letters_model.keras'
-MODEL_URL = 'https://drive.google.com/uc?export=download&id=1duhBG2BzWrnPuRmDRhYj931LrYTu1WsPb'
+MODEL_URL = 'https://drive.google.com/uc?export=download&id=1duhBG2BzWrnPuRmDRhYj931LrYTu1WsPb'  # ✔️ ou Hugging Face si dispo
+
+# --- TELECHARGEMENT SI NECESSAIRE ---
 
 if not os.path.exists(MODEL_PATH):
     os.makedirs("saved_models", exist_ok=True)
-    print("⬇️ Téléchargement du modèle depuis Drive...")
-    r = requests.get(MODEL_URL)
-    with open(MODEL_PATH, 'wb') as f:
-        f.write(r.content)
-    print("✅ Modèle téléchargé")
+    st.info("⬇️ Téléchargement du modèle...")
+    try:
+        r = requests.get(MODEL_URL, stream=True)
+        r.raise_for_status()
+        with open(MODEL_PATH, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+        st.success("✅ Modèle téléchargé avec succès.")
+    except Exception as e:
+        st.error(f"❌ Erreur de téléchargement : {e}")
+        st.stop()
 
-# Chargement du modèle entraîné
-model = load_model('saved_models/sign_language_letters_model.keras')
+# --- CHARGEMENT DU MODELE ---
 
-# Extraire les classes depuis le dossier
+try:
+    model = load_model(MODEL_PATH)
+except Exception as e:
+    st.error(f"❌ Erreur de chargement du modèle : {e}")
+    st.stop()
+
+# --- CLASSES ---
+
 classes = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+# --- INTERFACE UTILISATEUR ---
 
 st.title("📷 Reconnaissance de lettres ASL (images réelles)")
 uploaded_file = st.file_uploader("Téléversez une image (64x64)", type=["png", "jpg", "jpeg"])
 
 if uploaded_file is not None:
-    # Prétraitement de l'image
-    image = Image.open(uploaded_file).convert('L')  # niveau de gris
-    image = image.resize((64, 64))  # redimensionnement
-    img_array = np.array(image).astype(np.float32) / 255.0  # normalisation
-    img_array = img_array.reshape(1, 64, 64, 1)  # ajout de la dimension batch
+    image = Image.open(uploaded_file).convert('L')
+    image = image.resize((64, 64))
+    img_array = np.array(image).astype(np.float32) / 255.0
+    img_array = img_array.reshape(1, 64, 64, 1)
 
-    # Affichage de l'image
     st.image(image, caption='Image prétraitée', width=150)
 
     if st.button("🔍 Prédire"):
@@ -44,7 +61,6 @@ if uploaded_file is not None:
         st.success(f"Lettre prédite : **{predicted_class}**")
         st.info(f"🔢 Confiance : {confidence:.2f}%")
 
-        # Optionnel : afficher les scores de toutes les classes
-        st.subheader("Scores par classe :")
+        st.subheader("📊 Scores par classe :")
         for i, score in enumerate(prediction[0]):
             st.write(f"{classes[i]} : {score:.4f}")
