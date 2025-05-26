@@ -56,6 +56,5 @@ if uploaded_file is not None:
         st.info(f"🔢 Confiance : {confidence:.2f}%")
 
         st.subheader("📊 Scores par classe :")
-   for i, score in enumerate(prediction[0]):
-    st.write(f"{classes[i]} : {score:.4f}")
-
+        for i, score in enumerate(prediction[0]):
+            st.write(f"{classes[i]} : {score:.4f}")
