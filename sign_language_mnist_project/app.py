@@ -13,14 +13,21 @@ MODEL_FILENAME = "sign_language_letters_model.keras"
 st.info("⬇️ Téléchargement du modèle depuis Hugging Face...")
 try:
     model_path = hf_hub_download(
-    repo_id="Roroat/sign-language-model",
-    filename="sign_language_letters_model.keras",
-    local_dir="saved_models",
-    revision="main",
-    force_download=True
-)
+        repo_id=MODEL_REPO,
+        filename=MODEL_FILENAME,
+        local_dir="saved_models",
+        revision="main",
+        force_download=True
+    )
+
+    # Vérifie si c’est un vrai fichier binaire et pas un LFS pointer
+    with open(model_path, "rb") as f:
+        header = f.read(8)
+        if b"version " in header or b"oid sha256:" in header:
+            raise OSError("Fichier modèle corrompu (Git LFS pointer au lieu d’un fichier binaire)")
 
     st.success("✅ Modèle téléchargé avec succès.")
+
 except Exception as e:
     st.error(f"❌ Erreur lors du téléchargement : {e}")
     st.stop()
@@ -40,11 +47,10 @@ st.title("📷 Reconnaissance de lettres ASL (images réelles)")
 uploaded_file = st.file_uploader("📤 Téléversez une image (64x64)", type=["png", "jpg", "jpeg"])
 
 if uploaded_file is not None:
-    # Traitement de l’image
-    image = Image.open(uploaded_file).convert('L')  # niveau de gris
-    image = image.resize((64, 64))  # redimensionne à 64x64
-    img_array = np.array(image).astype(np.float32) / 255.0  # normalisation
-    img_array = img_array.reshape(1, 64, 64, 1)  # ajout d'une dimension batch
+    image = Image.open(uploaded_file).convert('L')
+    image = image.resize((64, 64))
+    img_array = np.array(image).astype(np.float32) / 255.0
+    img_array = img_array.reshape(1, 64, 64, 1)
 
     st.image(image, caption="🖼️ Image prétraitée", width=150)
 
