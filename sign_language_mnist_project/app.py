@@ -19,9 +19,8 @@ if not os.path.exists(MODEL_PATH):
 # Chargement du modèle entraîné
 model = load_model('saved_models/sign_language_letters_model.keras')
 
-# Extraire automatiquement les classes depuis le dossier
-data_dir = "data"
-classes = sorted([d for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))])
+# Extraire les classes depuis le dossier
+classes = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 st.title("📷 Reconnaissance de lettres ASL (images réelles)")
 uploaded_file = st.file_uploader("Téléversez une image (64x64)", type=["png", "jpg", "jpeg"])
