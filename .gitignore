@@ -1,0 +1,9 @@
+# Ignorer les fichiers inutiles
+__pycache__/
+*.pyc
+.DS_Store
+
+
+
+# Autoriser les sous-dossiers nécessaires
+!sign_language_mnist_project/saved_models/
