@@ -1,6 +1,7 @@
+streamlit
+tensorflow
+Pillow
 numpy
-pandas
 matplotlib
 seaborn
 scikit-learn
-tensorflow>=2.8.0
