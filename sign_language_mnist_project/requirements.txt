@@ -1,7 +1,8 @@
 streamlit
-tensorflow
-Pillow
+tensorflow==2.11.1
 numpy
+Pillow
 matplotlib
-seaborn
 scikit-learn
+seaborn
+requests
