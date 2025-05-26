@@ -4,5 +4,6 @@ numpy<2.0
 Pillow
 matplotlib
 seaborn
+huggingface_hub
 scikit-learn
 requests
