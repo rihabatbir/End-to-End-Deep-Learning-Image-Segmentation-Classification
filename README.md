@@ -151,9 +151,4 @@ Evaluation (classification report + confusion matrix) is available via `src/eval
 
 ---
 
-## 👩‍💻 Author
 
-**Rihab Atbir**
-Master's Student in Computer Science and Telecommunications
-Specialization: Applied Artificial Intelligence
-Mohammed V University in Rabat — Faculty of Sciences
